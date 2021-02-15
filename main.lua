@@ -13,14 +13,12 @@ VIRTUAL_WIDTH = 432
 VIRTUAL_HEIGHT = 243
 
 PADDLE_SPEED = 200
-
 winningScore = 2
-
-
 
 
 function love.load()
 
+    love.window.setTitle("Pwn the Pong!")
     love.graphics.setDefaultFilter('nearest', 'nearest')
     smallFont = love.graphics.newFont('fonts/font.ttf', 16)
     scoreFont = love.graphics.newFont('fonts/font.ttf', 32)
@@ -66,19 +64,45 @@ function love.load()
     -- Initial Game State
 
     gameState = 'start';
+
+    -- Speed
+    
+    iAmSpeed = math.random(10, 150) * 2
+
+    --  Text Test
+
+    goingDown = false
+    scaleX = 0.5
+    scaleY = 0.5
+
+
 end
 
 
 
 function love.update(dt)
 
+    if goingDown then
+        scaleX = scaleX - dt
+        scaleY = scaleY - dt
+        if scaleX < 0.5 then
+            goingDown = false
+        end
+     else
+        scaleX = scaleX + dt
+        scaleY = scaleY + dt
+        if scaleX > 1.5 then
+            goingDown = true
+        end
+     end
+
     if gameState == 'serve' then
         if servingPlayer == 1 then
-            ball.dx = math.random(-140, 200)
+            ball.dx = math.random(-140, 200)*2
         else
-            ball.dx = -math.random(-140, 200)
+            ball.dx = -math.random(-140, 200)*2
         end
-        ball.dy = math.random(-50, 50)
+        ball.dy = math.random(-50, 50)*3
 
 
     elseif gameState == 'play' then
@@ -101,10 +125,10 @@ function love.update(dt)
             sounds.hitSound:play() -- Player collision sound
 
             if ball.dy < 0 then
-                ball.dy = -math.random(10, 150)
+                ball.dy = -iAmSpeed
                 sounds.hitSound:play() -- Player collision sound
             else
-                ball.dy = math.random(10, 150)
+                ball.dy = iAmSpeed
                 sounds.hitSound:play() -- Player collision sound   
             end
         end
@@ -115,10 +139,10 @@ function love.update(dt)
             sounds.hitSound:play() -- Player collision sound
 
             if ball.dy < 0 then
-                ball.dy = -math.random(10, 150)
+                ball.dy = -iAmSpeed
                 sounds.hitSound:play() -- Player collision sound
             else
-                ball.dy = math.random(10, 150)
+                ball.dy = iAmSpeed
                 sounds.hitSound:play()  -- Player collision sound
             end
         end
@@ -222,12 +246,20 @@ function love.draw()
         love.graphics.setColor( 0, 255, 0)
         love.graphics.printf("Player ".. tostring(servingPlayer).."'s serve", 0, 10, VIRTUAL_WIDTH + 18, 'center')
         love.graphics.printf('Press enter to serve', 0, 95, VIRTUAL_WIDTH + 18, 'center')
+        --[[ love.graphics.push()
+        love.graphics.scale(scaleX, scaleY)
+        love.graphics.printf('Press enter to serve', 0, 95, VIRTUAL_WIDTH + 18, 'center')
+        love.graphics.pop()]]
     --elseif gamestate == 'play' then
     elseif gameState == 'done' then
         sounds.winSound:play() -- Win Sound
         love.graphics.setColor( 0, 255, 0)
         love.graphics.printf("Player ".. tostring(servingPlayer).." wins!", 0, 10, VIRTUAL_WIDTH + 18, 'center')
         love.graphics.printf('Press enter to restart', 0, 95, VIRTUAL_WIDTH + 18, 'center')
+        --[[ love.graphics.push()
+        love.graphics.scale(scaleX, scaleY)
+        love.graphics.printf('Press enter to restart', 0, 95, VIRTUAL_WIDTH + 18, 'center')
+        love.graphics.pop() ]]
     end
         
 
@@ -251,7 +283,3 @@ function drawDottedLine(line_height, gap_height)
         love.graphics.line(VIRTUAL_WIDTH / 2 - 2, y , VIRTUAL_WIDTH / 2 - 2, y + line_height)
     end
 end
-
-
-
--- https://github.com/YoungNeer/ping-pong
