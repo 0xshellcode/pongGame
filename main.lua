@@ -69,11 +69,12 @@ function love.load()
     
     iAmSpeed = math.random(10, 150) * 2
 
-    --  Text Test
+    --  Text Animation
 
     goingDown = false
-    scaleX = 0.5
-    scaleY = 0.5
+    scaleX = 1
+    scaleY = 1
+    dtValue = 10
 
 
 end
@@ -83,14 +84,14 @@ end
 function love.update(dt)
 
     if goingDown then
-        scaleX = scaleX - dt
-        scaleY = scaleY - dt
+        scaleX = scaleX - dtValue
+        scaleY = scaleY - dtValue
         if scaleX < 0.5 then
             goingDown = false
         end
      else
-        scaleX = scaleX + dt
-        scaleY = scaleY + dt
+        scaleX = scaleX + dtValue
+        scaleY = scaleY + dtValue
         if scaleX > 1.5 then
             goingDown = true
         end
@@ -245,21 +246,19 @@ function love.draw()
     elseif gameState == 'serve' then
         love.graphics.setColor( 0, 255, 0)
         love.graphics.printf("Player ".. tostring(servingPlayer).."'s serve", 0, 10, VIRTUAL_WIDTH + 18, 'center')
-        love.graphics.printf('Press enter to serve', 0, 95, VIRTUAL_WIDTH + 18, 'center')
-        --[[ love.graphics.push()
+        love.graphics.push()
         love.graphics.scale(scaleX, scaleY)
         love.graphics.printf('Press enter to serve', 0, 95, VIRTUAL_WIDTH + 18, 'center')
-        love.graphics.pop()]]
+        love.graphics.pop()
     --elseif gamestate == 'play' then
     elseif gameState == 'done' then
         sounds.winSound:play() -- Win Sound
         love.graphics.setColor( 0, 255, 0)
         love.graphics.printf("Player ".. tostring(servingPlayer).." wins!", 0, 10, VIRTUAL_WIDTH + 18, 'center')
-        love.graphics.printf('Press enter to restart', 0, 95, VIRTUAL_WIDTH + 18, 'center')
-        --[[ love.graphics.push()
+        love.graphics.push()
         love.graphics.scale(scaleX, scaleY)
         love.graphics.printf('Press enter to restart', 0, 95, VIRTUAL_WIDTH + 18, 'center')
-        love.graphics.pop() ]]
+        love.graphics.pop()
     end
         
 
